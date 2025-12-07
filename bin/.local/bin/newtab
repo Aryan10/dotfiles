@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Ask user for a session name
+read -p "Enter tmux session name: " name
+
+# If empty, generate a simple one
+if [[ -z "$name" ]]; then
+  name="session_$(date +%s)"
+fi
+
+exec tmux new-session -A -s "$name"
