@@ -26,4 +26,4 @@ unset rc
 
 # Oh My Posh
 
-eval "$(oh-my-posh init bash --config ~/.atomic.omp.json)"
+eval "$(oh-my-posh init bash --config ~/.prompt.omp.json)"
