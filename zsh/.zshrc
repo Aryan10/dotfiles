@@ -13,6 +13,9 @@ source "$HOME/.prompt.zsh"
 # Custom Aliases
 source "$HOME/.aliases.zsh"
 
+# Custom greeting message
+source "$HOME/.greeting.zsh"
+
 # ---------------------------------------------------------
 # Auto-start tmux
 # ---------------------------------------------------------

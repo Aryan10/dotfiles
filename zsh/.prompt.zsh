@@ -28,12 +28,12 @@ setopt HIST_VERIFY
 # Powerlevel10k Theme
 # ---------------------------------------------------------
 
-# source ~/.powerlevel10k/powerlevel10k.zsh-theme
-# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+source ~/.powerlevel10k/powerlevel10k.zsh-theme
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 
 # ---------------------------------------------------------
 # Oh My Posh
 # ---------------------------------------------------------
 
-eval "$(oh-my-posh init zsh --config ~/.prompt.omp.json)"
+# eval "$(oh-my-posh init zsh --config ~/.prompt.omp.json)"
