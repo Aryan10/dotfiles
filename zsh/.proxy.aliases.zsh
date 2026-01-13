@@ -85,3 +85,8 @@ proxyauto() {
         proxyon --local
     fi
 }
+
+# Redsocks transparent proxy redirection
+proxyredsocks() {
+  pkexec /usr/local/sbin/proxyredsocks "$1"
+}
