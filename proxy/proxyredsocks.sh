@@ -1,36 +1,32 @@
 #!/usr/bin/env bash
-# =============================================================================
-# Redsocks System-wide Proxy Manager
-# =============================================================================
-# This script manages system-wide TCP traffic redirection through redsocks,
-# enabling transparent proxying for applications that don't support proxy settings.
-#
-# Installation:
-#   sudo install -m 755 -o root -g root ~/.dotfiles/misc/proxyredsocks.zsh /usr/local/sbin/proxyredsocks
-#
-# Requires:
-#   - redsocks service installed and configured
-#   - iptables (netfilter)
-#   - sudo/root privileges
-#   - polkit rules configured (see: 90-proxyredsocks.rules.js)
-#
-# Usage:
-#   proxyredsocks on      - Enable system-wide transparent proxy
-#   proxyredsocks off     - Disable system-wide transparent proxy
-#   proxyredsocks status  - Check if redsocks service is active
-# =============================================================================
-
 set -euo pipefail
 
 # Configuration
 PORT=12345              # Redsocks listening port
 CHAIN=REDSOCKS          # iptables chain name
 SERVICE=redsocks        # systemd service name
+PROXY_IP="${2:-}"       # Proxy server IP address (passed as argument)
+
+rewrite_conf() {
+  if [[ -z "$PROXY_IP" ]]; then
+    echo "[!] Usage: proxyredsocks on <PROXY_IP>"
+    exit 1
+  fi
+
+  echo "[*] Using proxy http://edcguest:edcguest@$PROXY_IP:3128"
+
+  sed \
+    -e "s/__PROXY_IP__/${PROXY_IP}/g" \
+    /etc/redsocks.conf.template > /etc/redsocks.conf.new
+
+  mv /etc/redsocks.conf.new /etc/redsocks.conf
+}
 
 case "$1" in
 
-  on)
+  enable)
     # Start the redsocks service
+    rewrite_conf
     systemctl start $SERVICE
 
     # Create or flush the custom iptables chain
@@ -63,7 +59,7 @@ case "$1" in
       iptables -A OUTPUT -p udp --dport 443 -j DROP
     ;;
 
-  off)
+  disable)
     # Remove OUTPUT chain link
     iptables -t nat -D OUTPUT -p tcp -j $CHAIN 2>/dev/null || true
     
@@ -84,6 +80,6 @@ case "$1" in
     ;;
 
   *)
-    echo "Usage: proxyredsocks {on|off|status}"
+    echo "[!] Usage: proxyredsocks {on|off|status}"
     exit 1
 esac
