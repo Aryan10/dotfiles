@@ -6,10 +6,17 @@
 eval "$(zoxide init zsh)"
 alias cd="z"
 
+# --- Editors ---
+alias nano="micro"
+alias vi="micro"
+alias vim="micro"
+alias edit="micro"
+
 # --- Eza ---
-alias ls="eza --icons --group-directories-first"
-alias la="eza -lah --icons --group-directories-first"
-alias lt="eza -T --icons --level=3"
+local ls_options="--hyperlink --icons --group-directories-first"
+alias ls="eza $ls_options"
+alias la="eza $ls_options -lah"
+alias lt="eza $ls_options -T --level=3"
 
 # --- Batman ---
 export MANPAGER="sh -c 'col -bx | bat --paging=always --language=man'"

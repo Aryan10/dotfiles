@@ -13,6 +13,12 @@ proxy() {
             shift
             _proxy_redsocks "$@"
             ;;
+        test)
+            _proxy_test
+            ;;
+        get)
+            _proxy_get
+            ;;
         help)
             _proxy_help
             ;;
@@ -231,6 +237,69 @@ _proxy_redsocks() {
   esac
 }
 
+kitty-cmd() {
+    local text="$1"
+    shift
+    local cmd="$*"
+    local encoded
+    encoded=$(printf '%s' "$cmd" | sed 's/ /%%20/g')
+    printf '\e]8;;kitty-cmd://%s\e\\%s\e]8;;\e\\\n' "$encoded" "$text"
+}
+
+
+# Proxy testing command
+_proxy_test() {
+    local url="https://example.com"  # URL to test proxies against
+    local proxy_file="$HOME/.dotfiles/proxy/proxy.txt"
+
+    if [[ ! -f "$proxy_file" ]]; then
+        echo -e "${_CLR_ERROR}Proxy file not found: $proxy_file${_CLR_RESET}"
+        return 1
+    fi
+
+    local total=$(wc -l < "$proxy_file")
+    local count=0
+
+    echo -e "${_CLR_INFO}${_CLR_BOLD}Testing proxies...${_CLR_RESET}"
+
+    while IFS= read -r ip; do
+        count=$((count + 1))
+        echo -ne "\rTesting proxy $count/$total..."
+
+        local proxy="http://edcguest:edcguest@$ip:3128"
+
+        if curl -x "$proxy" -s --connect-timeout 5 "$url" > /dev/null; then
+            echo -e "\r${_CLR_SUCCESS}✓ Test passed:${_CLR_RESET} $ip\t\t${_CLR_ACCENT} $(kitty-cmd "proxy system set $ip" "proxy system set $ip") ${_CLR_RESET}"
+        else
+            echo -e "\r${_CLR_ERROR}✗ Test failed:${_CLR_RESET} $ip"
+        fi
+    done < "$proxy_file"
+
+    echo -e "${_CLR_SUCCESS}${_CLR_BOLD}✓ Proxy testing completed.${_CLR_RESET}"
+}
+
+# Get and display current proxy settings
+_proxy_get() {
+    echo -e "${_CLR_INFO}${_CLR_BOLD}Current Proxy Settings:${_CLR_RESET}"
+
+    # Display system proxy settings
+    local system_mode=$(gsettings get org.gnome.system.proxy mode)
+    local system_http=$(gsettings get org.gnome.system.proxy.http host)
+    local system_https=$(gsettings get org.gnome.system.proxy.https host)
+
+    echo -e "${_CLR_ACCENT}System Proxy:${_CLR_RESET}"
+    echo -e "  Mode: ${_CLR_DIM}$system_mode${_CLR_RESET}"
+    echo -e "  HTTP: ${_CLR_DIM}$system_http${_CLR_RESET}"
+    echo -e "  HTTPS: ${_CLR_DIM}$system_https${_CLR_RESET}"
+
+    # Display environment proxy settings
+    echo -e "${_CLR_ACCENT}Environment Proxy:${_CLR_RESET}"
+    echo -e "  http_proxy: ${_CLR_DIM}${http_proxy:-Not Set}${_CLR_RESET}"
+    echo -e "  https_proxy: ${_CLR_DIM}${https_proxy:-Not Set}${_CLR_RESET}"
+    echo -e "  HTTP_PROXY: ${_CLR_DIM}${HTTP_PROXY:-Not Set}${_CLR_RESET}"
+    echo -e "  HTTPS_PROXY: ${_CLR_DIM}${HTTPS_PROXY:-Not Set}${_CLR_RESET}"
+}
+
 # Display help information
 _proxy_help() {
     cat << 'EOF'
@@ -261,6 +330,8 @@ REDSOCKS REDIRECTION COMMANDS:
   proxy redsocks status         Show transparent proxy status
 
 GENERAL COMMANDS:
+  proxy get                     Display current proxy settings
+  proxy test                    Test proxies listed in proxy.txt file
   proxy help                    Show this help message
 EOF
 }
