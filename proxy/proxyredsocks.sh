@@ -9,7 +9,7 @@ PROXY_IP="${2:-}"       # Proxy server IP address (passed as argument)
 
 rewrite_conf() {
   if [[ -z "$PROXY_IP" ]]; then
-    echo "[!] Usage: proxyredsocks on <PROXY_IP>"
+    echo "[!] Usage: proxyredsocks enable <PROXY_IP>"
     exit 1
   fi
 
@@ -22,7 +22,7 @@ rewrite_conf() {
   mv /etc/redsocks.conf.new /etc/redsocks.conf
 }
 
-case "$1" in
+case "${1:-}" in
 
   enable)
     # Start the redsocks service
@@ -80,6 +80,6 @@ case "$1" in
     ;;
 
   *)
-    echo "[!] Usage: proxyredsocks {on|off|status}"
+    echo "[!] Usage: proxyredsocks {enable|disable|status}"
     exit 1
 esac
