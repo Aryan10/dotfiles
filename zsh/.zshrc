@@ -11,7 +11,7 @@ source "$HOME/.plugins.zsh"
 source "$HOME/.prompt.zsh"
 
 # Custom Aliases
-source "$HOME/.aliases.zsh"
+source "$HOME/.aliases.sh"
 
 # Custom greeting message
 source "$HOME/.greeting.zsh"

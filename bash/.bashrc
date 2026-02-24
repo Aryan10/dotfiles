@@ -24,6 +24,8 @@ if [ -d ~/.bashrc.d ]; then
 fi
 unset rc
 
-# Oh My Posh
+# shell/.aliases.sh
+source "$HOME/.aliases.sh"
 
+# Oh My Posh
 eval "$(oh-my-posh init bash --config ~/.prompt.omp.json)"
