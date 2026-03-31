@@ -24,6 +24,8 @@ if [ -d ~/.bashrc.d ]; then
 fi
 unset rc
 
+# ------------------------------------------------------------------
+
 # shell/.aliases.sh
 source "$HOME/.aliases.sh"
 
