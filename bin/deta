@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+last_file="${XDG_CACHE_HOME:-$HOME/.cache}/det/last"
+
+if ! command -v tmux >/dev/null 2>&1; then
+  echo "deta: tmux not found. Install tmux to use deta."
+  exit 1
+fi
+
+if [[ -f "$last_file" ]]; then
+  name=$(cat "$last_file")
+  if tmux has-session -t "$name" 2>/dev/null; then
+    exec tmux attach -t "$name"
+  fi
+  echo "deta: last session '$name' not found; falling back to latest det session" >&2
+fi
+
+latest=$(
+  tmux ls 2>/dev/null \
+    | sed -n 's/^\(det_[^:]*\).*/\1/p' \
+    | sort \
+    | tail -n 1
+)
+
+if [[ -z "$latest" ]]; then
+  echo "deta: no det sessions found"
+  exit 1
+fi
+
+echo "$latest" >"$last_file"
+exec tmux attach -t "$latest"
