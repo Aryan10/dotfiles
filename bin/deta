@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+last_file="${XDG_CACHE_HOME:-$HOME/.cache}/det/last"
+if [[ ! -f "$last_file" ]]; then
+  echo "deta: no last det session recorded"
+  exit 1
+fi
+
+name=$(cat "$last_file")
+exec tmux attach -t "$name"

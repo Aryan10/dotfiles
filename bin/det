@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/det"
+last_file="$cache_dir/last"
+mkdir -p "$cache_dir"
+
+usage() {
+  cat <<'USAGE'
+Usage:
+  det [--name NAME] [--attach] <command> [args...]
+
+Options:
+  --name NAME   Use a fixed tmux session name
+  --attach      Attach immediately after starting
+
+Helpers:
+  detl          List det sessions
+  deta          Attach to last det session
+  detk          Kill last det session
+USAGE
+}
+
+if [[ $# -eq 0 ]]; then
+  usage
+  exit 1
+fi
+
+name=""
+attach=0
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --name)
+      name="${2:-}"
+      shift 2
+      ;;
+    --attach)
+      attach=1
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      echo "det: unknown option: $1"
+      exit 1
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+if [[ -z "${name}" ]]; then
+  name="det_$(date +%Y%m%d_%H%M%S)"
+fi
+
+if [[ $# -eq 0 ]]; then
+  echo "det: missing command"
+  usage
+  exit 1
+fi
+
+if ! command -v tmux >/dev/null 2>&1; then
+  echo "det: tmux not found. Install tmux to use det."
+  exit 1
+fi
+
+if ! command -v systemd-inhibit >/dev/null 2>&1; then
+  echo "det: systemd-inhibit not found. Install systemd or adjust your setup."
+  exit 1
+fi
+
+cmd=$(printf '%q ' "$@")
+cmd=${cmd% }
+
+tmux new-session -d -s "$name" \
+  "systemd-inhibit --what=handle-lid-switch:sleep --mode=block --why='detached: $cmd' bash -lc \"$cmd\""
+
+echo "$name" >"$last_file"
+
+echo "Started tmux session: $name"
+if [[ $attach -eq 1 ]]; then
+  tmux attach -t "$name"
+else
+  echo "Attach with: tmux attach -t $name"
+fi

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+tmux ls 2>/dev/null | sed -n 's/^\(det_[^:]*\).*/\1/p'
