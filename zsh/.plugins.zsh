@@ -23,6 +23,10 @@ export MANPAGER="sh -c 'col -bx | bat --paging=always --language=man'"
 export MANROFFOPT="-c"
 export LESS='-R --mouse'  # Fix scrollwheel in less/man/bat
 
+# ----GLOW ----
+alias md='glow'
+alias cat='glow'
+
 # ----- Fish-style up/down arrow search -----
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
