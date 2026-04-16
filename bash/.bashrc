@@ -26,7 +26,8 @@ unset rc
 
 # ------------------------------------------------------------------
 
-# shell/.aliases.sh
+# source shell
+source "$HOME/.export.sh"
 source "$HOME/.aliases.sh"
 
 # Oh My Posh

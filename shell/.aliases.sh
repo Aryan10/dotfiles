@@ -1,12 +1,12 @@
 # Color definitions
-readonly _CLR_RESET='\033[0m'
-readonly _CLR_BOLD='\033[1m'
-readonly _CLR_DIM='\033[2m'
-readonly _CLR_INFO='\033[38;5;87m'      # Cyan
-readonly _CLR_SUCCESS='\033[38;5;83m'   # Green
-readonly _CLR_WARN='\033[38;5;221m'     # Yellow
-readonly _CLR_ERROR='\033[38;5;203m'    # Red
-readonly _CLR_ACCENT='\033[38;5;177m'   # Magenta
+_CLR_RESET='\033[0m'
+_CLR_BOLD='\033[1m'
+_CLR_DIM='\033[2m'
+_CLR_INFO='\033[38;5;87m'      # Cyan
+_CLR_SUCCESS='\033[38;5;83m'   # Green
+_CLR_WARN='\033[38;5;221m'     # Yellow
+_CLR_ERROR='\033[38;5;203m'    # Red
+_CLR_ACCENT='\033[38;5;177m'   # Magenta
 
 # CLI to manage proxy settings
 source "$HOME/.dotfiles/proxy/proxy.sh"
@@ -41,3 +41,52 @@ mkopen() {
 
   echo "<meta http-equiv=\"refresh\" content=\"0; url=${url}\">" > "${filename}.html"
 }
+
+# Mount Google Drive (My Drive + Shared with me)
+gmount() {
+    local BASE="$HOME/gdrive"
+    local SHARED="$HOME/gdrive-shared"
+
+    mkdir -p "$BASE" "$SHARED"
+
+    echo "[*] Mounting My Drive at $BASE"
+    rclone mount gdrive: "$BASE" \
+        --vfs-cache-mode full \
+        --vfs-cache-max-size 10G \
+        --buffer-size 256M \
+        --daemon
+
+    # echo "[*] Mounting Shared with me at $SHARED"
+    # rclone mount gdrive: "$SHARED" \
+    #     --drive-shared-with-me \
+    #     --vfs-cache-mode full \
+    #     --vfs-cache-max-size 10G \
+    #     --buffer-size 256M \
+    #     --daemon
+
+    echo "[✓] Mounts started"
+}
+
+# C++ extreme compilation for debugging
+cpp() {
+	# fast = -std=c++23 -O0 -g1
+	# best = -std=c++23 -Og -g3 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address,undefined,leak -fno-sanitize-recover=all -fstack-protector-strong -fno-omit-frame-pointer
+
+    g++ -std=c++23 -Og -g3 \
+    -Wall -Wextra -Wpedantic \
+    -Wshadow -Wconversion -Wsign-conversion \
+    -Wfloat-equal -Wduplicated-cond -Wlogical-op \
+    -Wuseless-cast -Wformat=2 -Wnull-dereference \
+    -Wdouble-promotion -Wimplicit-fallthrough \
+    -Wcast-align -Wstrict-overflow=5 \
+    -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC \
+    -fsanitize=address,undefined,leak \
+    -fno-sanitize-recover=all \
+    -fstack-protector-strong \
+    -fno-omit-frame-pointer \
+    -o out "$1" && \
+    ./out < input.txt
+    rm out
+}
+
+alias c++=cpp

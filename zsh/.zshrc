@@ -13,6 +13,9 @@ source "$HOME/.prompt.zsh"
 # Custom Aliases
 source "$HOME/.aliases.sh"
 
+# Basic Environment
+source "$HOME/.export.sh"
+
 # Custom greeting message
 source "$HOME/.greeting.zsh"
 
