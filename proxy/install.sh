@@ -1,5 +1,6 @@
 # Install proxyredsocks cli script
 sudo install -m 755 -o root -g root ~/.dotfiles/proxy/proxyredsocks.sh /usr/local/sbin/proxyredsocks
+sudo install -m 755 -o root -g root ~/.dotfiles/proxy/masquerade.sh /usr/local/sbin/masquerade
 
 # Install polkit rules for proxyredsocks
 sudo install -m 644 -o root -g root ~/.dotfiles/proxy/90-proxyredsocks.rules.js /etc/polkit-1/rules.d/90-proxyredsocks.rules

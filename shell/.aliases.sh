@@ -79,6 +79,11 @@ gmount() {
     echo "[✓] Mounts started"
 }
 
+# scrcpy to cast phone screen
+adbcast() {
+	scrcpy --video-bit-rate=16M --max-fps=60 --max-size=1920 --render-driver=opengl --keyboard=uhid --turn-screen-off -M
+}
+
 # C++ extreme compilation for debugging
 cpp() {
 	# fast = -std=c++23 -O0 -g1
