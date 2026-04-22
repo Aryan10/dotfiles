@@ -45,24 +45,36 @@ mkopen() {
 # Mount Google Drive (My Drive + Shared with me)
 gmount() {
     local BASE="$HOME/gdrive"
+    local ALT="$HOME/gdrive-u"
     local SHARED="$HOME/gdrive-shared"
 
-    mkdir -p "$BASE" "$SHARED"
-
-    echo "[*] Mounting My Drive at $BASE"
+    mkdir -p "$BASE"
+    echo "[*] Mounting gdrive (My Drive) at $BASE"
     rclone mount gdrive: "$BASE" \
         --vfs-cache-mode full \
         --vfs-cache-max-size 10G \
         --buffer-size 256M \
         --daemon
 
-    # echo "[*] Mounting Shared with me at $SHARED"
-    # rclone mount gdrive: "$SHARED" \
-    #     --drive-shared-with-me \
-    #     --vfs-cache-mode full \
-    #     --vfs-cache-max-size 10G \
-    #     --buffer-size 256M \
-    #     --daemon
+   mkdir -p "$ALT"
+   echo "[*] Mounting gdrive-u (My Drive) at $ALT"
+   rclone mount gdrive-u: "$ALT" \
+       --vfs-cache-mode full \
+       --vfs-cache-max-size 10G \
+       --buffer-size 256M \
+       --daemon
+
+	# Optional shared mount
+    if [[ "$1" == "--shared" ]]; then
+        mkdir -p "$SHARED"
+        echo "[*] Mounting gdrive (Shared with me) at $SHARED"
+        rclone mount gdrive: "$SHARED" \
+            --drive-shared-with-me \
+            --vfs-cache-mode full \
+            --vfs-cache-max-size 10G \
+            --buffer-size 256M \
+            --daemon
+    fi
 
     echo "[✓] Mounts started"
 }
