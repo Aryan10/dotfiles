@@ -7,6 +7,18 @@ CHAIN=REDSOCKS          # iptables chain name
 SERVICE=redsocks        # systemd service name
 PROXY_IP="${2:-}"       # Proxy server IP address (passed as argument)
 
+# Reserved/private networks that should bypass the proxy
+RESERVED=(
+  0.0.0.0/8
+  10.0.0.0/8
+  127.0.0.0/8
+  169.254.0.0/16
+  172.16.0.0/12
+  192.168.0.0/16
+  224.0.0.0/4
+  240.0.0.0/4
+)
+
 rewrite_conf() {
   if [[ -z "$PROXY_IP" ]]; then
     echo "[!] Usage: proxyredsocks enable <PROXY_IP>"
@@ -29,21 +41,16 @@ case "${1:-}" in
     rewrite_conf
     systemctl start $SERVICE
 
+    # Enable IP forwarding (required for hotspot NAT)
+    sysctl -w net.ipv4.ip_forward=1 > /dev/null
+
     # Create or flush the custom iptables chain
     iptables -t nat -N $CHAIN 2>/dev/null || true
     iptables -t nat -F $CHAIN
 
     # Exclude private/reserved networks from redirection (whitelist)
     # Traffic to these networks bypasses the proxy
-    for net in \
-      0.0.0.0/8 \
-      10.0.0.0/8 \
-      127.0.0.0/8 \
-      169.254.0.0/16 \
-      172.16.0.0/12 \
-      192.168.0.0/16 \
-      224.0.0.0/4 \
-      240.0.0.0/4; do
+    for net in "${RESERVED[@]}"; do
       iptables -t nat -A $CHAIN -d $net -j RETURN
     done
 
@@ -54,14 +61,27 @@ case "${1:-}" in
     iptables -t nat -C OUTPUT -p tcp -j $CHAIN 2>/dev/null || \
       iptables -t nat -A OUTPUT -p tcp -j $CHAIN
 
+    # Link the custom chain to the PREROUTING chain for hotspot/forwarded traffic
+    iptables -t nat -C PREROUTING -p tcp -j $CHAIN 2>/dev/null || \
+      iptables -t nat -A PREROUTING -p tcp -j $CHAIN
+
     # Block QUIC/UDP 443 to prevent direct HTTPS connections bypassing proxy
+    # For local traffic
     iptables -C OUTPUT -p udp --dport 443 -j DROP 2>/dev/null || \
       iptables -A OUTPUT -p udp --dport 443 -j DROP
+    # For forwarded traffic
+    iptables -C FORWARD -p udp --dport 443 -j DROP 2>/dev/null || \
+      iptables -A FORWARD -p udp --dport 443 -j DROP
+
+    echo "[*] Redsocks enabled"
     ;;
 
   disable)
     # Remove OUTPUT chain link
     iptables -t nat -D OUTPUT -p tcp -j $CHAIN 2>/dev/null || true
+
+    # Remove PREROUTING chain link (hotspot traffic)
+    iptables -t nat -D PREROUTING -p tcp -j $CHAIN 2>/dev/null || true
     
     # Flush and remove the custom chain
     iptables -t nat -F $CHAIN 2>/dev/null || true
@@ -69,14 +89,34 @@ case "${1:-}" in
     
     # Re-enable QUIC/UDP 443
     iptables -D OUTPUT -p udp --dport 443 -j DROP 2>/dev/null || true
+    iptables -D FORWARD -p udp --dport 443 -j DROP 2>/dev/null || true
     
     # Stop the redsocks service
     systemctl stop $SERVICE
+
+    echo "[*] Redsocks disabled"
     ;;
 
   status)
     # Check if redsocks service is running
-    systemctl is-active $SERVICE
+    echo -n "Service: "
+    systemctl is-active $SERVICE || true
+
+    if [[ $EUID -ne 0 ]]; then
+      echo "(run as root to see iptables rules)"
+    else
+      echo ""
+      echo "=== NAT OUTPUT chain ==="
+      iptables -t nat -L OUTPUT -n --line-numbers 2>/dev/null | grep -i redsocks || echo "(no REDSOCKS rules)"
+
+      echo ""
+      echo "=== NAT PREROUTING chain ==="
+      iptables -t nat -L PREROUTING -n --line-numbers 2>/dev/null | grep -i redsocks || echo "(no REDSOCKS rules)"
+
+      echo ""
+      echo "=== REDSOCKS chain ==="
+      iptables -t nat -L $CHAIN -n --line-numbers 2>/dev/null || echo "(chain does not exist)"
+    fi
     ;;
 
   *)
