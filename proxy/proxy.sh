@@ -360,6 +360,11 @@ REDSOCKS REDIRECTION COMMANDS:
   proxy redsocks disable        Disable transparent proxy redirection
   proxy redsocks status         Show transparent proxy status
 
+MASQUERADE COMMANDS:
+  proxy masquerade enable [tun0] [wlp2s0]
+  proxy masquerade disable
+  proxy masquerade status
+
 GENERAL COMMANDS:
   proxy get                     Display current proxy settings
   proxy test                    Test proxies listed in proxy.txt file
