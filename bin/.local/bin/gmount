@@ -1,0 +1,197 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+########################################
+# CONFIG
+########################################
+
+BASE="$HOME/gdrive"
+ALT="$HOME/gdrive-u"
+SHARED="$HOME/gdrive-shared"
+
+CACHE_SIZE="10G"
+BUFFER_SIZE="256M"
+
+MODE="interactive"
+MOUNT_SHARED=false
+DO_UNMOUNT=false
+
+########################################
+# HELP
+########################################
+
+usage() {
+    cat <<EOF
+Usage: gmount [options]
+
+Options:
+  --bg           Run in background mode (notifications instead of prompts)
+  --shared       Include "Shared with me" mount
+  --unmount      Unmount all configured mounts
+  -h, --help     Show this help message
+
+Examples:
+  gmount
+  gmount --shared
+  gmount --bg
+  gmount --unmount
+  gmount --unmount --shared
+EOF
+}
+
+########################################
+# ARG PARSING
+########################################
+
+for arg in "$@"; do
+    case "$arg" in
+        --bg) MODE="background" ;;
+        --shared) MOUNT_SHARED=true ;;
+        --unmount) DO_UNMOUNT=true ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "Unknown argument: $arg"
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+########################################
+# HELPERS
+########################################
+
+log() {
+    echo "[$(date '+%H:%M:%S')] $*"
+}
+
+notify_failure() {
+    local name="$1"
+    local remote="$2"
+
+    if [[ "$MODE" == "interactive" ]]; then
+        echo "[!] $name failed"
+        echo "    Fix with:"
+        echo "    rclone config reconnect $remote"
+    else
+        notify-send "gmount: $name failed" \
+            "Run: rclone config reconnect $remote" \
+            --expire-time=0 || true
+    fi
+}
+
+check_remote() {
+    local remote="$1"
+    rclone about "$remote" &>/dev/null
+}
+
+is_mounted() {
+    local path="$1"
+    mountpoint -q "$path"
+}
+
+########################################
+# UNMOUNT LOGIC
+########################################
+
+unmount_one() {
+    local name="$1"
+    local path="$2"
+
+    if ! is_mounted "$path"; then
+        log "$name is not mounted"
+        return 0
+    fi
+
+    log "Unmounting $name"
+
+    # Try clean unmount
+    if fusermount -u "$path" 2>/dev/null; then
+        log "Unmounted $name"
+        return 0
+    fi
+
+    # Fallback (lazy unmount)
+    log "Normal unmount failed, trying lazy unmount"
+    if fusermount -uz "$path"; then
+        log "Lazy unmounted $name"
+        return 0
+    fi
+
+    log "Failed to unmount $name"
+    return 1
+}
+
+########################################
+# CORE MOUNT LOGIC
+########################################
+
+mount_one() {
+    local name="$1"
+    local remote="$2"
+    local path="$3"
+    local extra="${4:-}"
+
+    mkdir -p "$path"
+
+    log "Mounting $name → $path"
+
+    if ! check_remote "$remote"; then
+        notify_failure "$name" "$remote"
+        return 1
+    fi
+
+    if is_mounted "$path"; then
+        log "$name already mounted"
+        return 0
+    fi
+
+    rclone mount "$remote" "$path" \
+        --vfs-cache-mode full \
+        --vfs-cache-max-size "$CACHE_SIZE" \
+        --buffer-size "$BUFFER_SIZE" \
+        $extra \
+        --daemon
+
+    sleep 2
+
+    if ! is_mounted "$path"; then
+        notify_failure "$name" "$remote"
+        return 1
+    fi
+
+    log "Mounted $name"
+}
+
+########################################
+# MAIN
+########################################
+
+main() {
+    if [[ "$DO_UNMOUNT" == true ]]; then
+        unmount_one "gdrive (My Drive)" "$BASE"
+        unmount_one "gdrive-u (My Drive)" "$ALT"
+
+        if [[ "$MOUNT_SHARED" == true ]]; then
+            unmount_one "gdrive (Shared)" "$SHARED"
+        fi
+
+        log "Unmount routine finished"
+        return
+    fi
+
+    mount_one "gdrive (My Drive)" "gdrive:" "$BASE"
+    mount_one "gdrive-u (My Drive)" "gdrive-u:" "$ALT"
+
+    if [[ "$MOUNT_SHARED" == true ]]; then
+        mount_one "gdrive (Shared)" "gdrive:" "$SHARED" "--drive-shared-with-me"
+    fi
+
+    log "All mounts attempted"
+}
+
+main "$@"
