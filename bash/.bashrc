@@ -1,5 +1,3 @@
-# .bashrc
-
 # Source global definitions
 if [ -f /etc/bashrc ]; then
     . /etc/bashrc
@@ -26,9 +24,8 @@ unset rc
 
 # ------------------------------------------------------------------
 
-# source shell
-source "$HOME/.export.sh"
-source "$HOME/.aliases.sh"
+# Shared environment
+source "$HOME/.envrc"
 
 # Oh My Posh
 eval "$(oh-my-posh init bash --config ~/.prompt.omp.json)"

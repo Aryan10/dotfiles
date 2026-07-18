@@ -8,9 +8,6 @@ _CLR_WARN='\033[38;5;221m'     # Yellow
 _CLR_ERROR='\033[38;5;203m'    # Red
 _CLR_ACCENT='\033[38;5;177m'   # Magenta
 
-# CLI to manage proxy settings
-source "$HOME/.dotfiles/proxy/proxy.sh"
-
 # Reboot directly into Windows
 winboot() {
     sudo grub2-reboot 'Windows Boot Manager (on /dev/nvme0n1p1)' && reboot

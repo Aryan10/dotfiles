@@ -1,0 +1,184 @@
+{
+  // =========================
+  // UI & WORKBENCH
+  // =========================
+  "workbench.startupEditor": "none",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.activityBar.location": "top",
+  "workbench.editor.empty.hint": "hidden",
+  "workbench.preferredHighContrastColorTheme": "Dark Modern",
+
+  "window.zoomLevel": -0.7,
+
+  // =========================
+  // EDITOR
+  // =========================
+  "editor.fontSize": 15,
+  "editor.fontFamily": "'MesloLGS NF'",
+  "editor.minimap.enabled": false,
+  "editor.minimap.autohide": "mouseover",
+  "editor.mouseWheelScrollSensitivity": 2.5,
+
+  // =========================
+  // TERMINAL
+  // =========================
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.mouseWheelScrollSensitivity": 2.5,
+  "terminal.integrated.enableMultiLinePasteWarning": "always",
+
+  // =========================
+  // GIT
+  // =========================
+  "git.autofetch": true,
+  "git.fetchOnPull": true,
+  "git.ignoreLegacyWarning": true,
+  "git.openRepositoryInParentFolders": "always",
+
+  // =========================
+  // AI / AUTOCOMPLETE
+  // =========================
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false,
+    "c": false
+  },
+  "github.copilot.chat.scopeSelection": true,
+  "github.copilot.chat.codesearch.enabled": true,
+  "github.copilot.nextEditSuggestions.enabled": true,
+
+  "supermaven.enable": {
+    "*": false
+  },
+  "supermaven.otherWarning": false,
+  "supermaven.allowGitignore": true,
+
+  // =========================
+  // C / C++
+  // =========================
+  "C_Cpp.default.compilerPath": "/usr/bin/g++",
+  "C_Cpp.default.cppStandard": "c++23",
+  "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+  "C_Cpp.codeAnalysis.runAutomatically": false,
+
+  "[cpp]": {
+    "editor.wordBasedSuggestions": "matchingDocuments",
+    "editor.semanticHighlighting.enabled": true,
+    "editor.stickyScroll.defaultModel": "foldingProviderModel",
+    "editor.suggest.insertMode": "replace"
+  },
+
+  // =========================
+  // COMPETITIVE PROGRAMMING
+  // =========================
+  "cph.general.defaultLanguage": "cpp",
+  "cph.general.ignoreSTDERROR": true,
+  "cph.general.timeOut": 10000,
+  "cph.general.menuChoices": "cpp java js python c",
+
+  "cph.language.cpp.Args": "--std=c++23",
+  // "cph.language.cpp.Args": "-std=c++23 -Og -g3 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address,undefined,leak -fno-sanitize-recover=all -fstack-protector-strong -fno-omit-frame-pointer",
+
+  // =========================
+  // PYTHON
+  // =========================
+  "python.defaultInterpreterPath": "python3",
+  "python.createEnvironment.trigger": "off",
+
+  // =========================
+  // JAVA
+  // =========================
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java",
+    "editor.formatOnSave": false
+  },
+
+  // =========================
+  // JAVASCRIPT / TYPESCRIPT
+  // =========================
+  "javascript.updateImportsOnFileMove.enabled": "always",
+
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2
+  },
+
+  // =========================
+  // FORMATTING (JSON, HTML, MD)
+  // =========================
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // =========================
+  // FILES / ASSOCIATIONS
+  // =========================
+  "files.associations": {
+    "*.asm": "retroasm_8085"
+  },
+  "files.exclude": {
+    "**/*.asm~": true
+  },
+  "workbench.editorAssociations": {
+    "*.copilotmd": "vscode.markdown.preview.editor",
+    "*.md": "markdown-preview-enhanced",
+    "*.markdown": "markdown-preview-enhanced",
+    "*.mdown": "markdown-preview-enhanced",
+    "*.mkdn": "markdown-preview-enhanced",
+    "*.mkd": "markdown-preview-enhanced",
+    "*.rmd": "markdown-preview-enhanced",
+    "*.qmd": "markdown-preview-enhanced",
+    "*.mdx": "markdown-preview-enhanced"
+  },
+  "makefile.configureOnOpen": false,
+
+  // =========================
+  // NOTEBOOK / JUPYTER
+  // =========================
+  "notebook.output.scrolling": true,
+  "jupyter.askForKernelRestart": false,
+
+  // =========================
+  // EXTENSIONS / MISC
+  // =========================
+  "regionFold.regionNames": ["ultraaryan10", "TEMPLATE", "DEBUG"],
+
+  "vscodeWorkspaceSwitcher.showDeleteWorkspaceButton": false,
+  "vscodeWorkspaceSwitcher.showTreeView": true,
+  "vscodeWorkspaceSwitcher.showInActivityBar": false,
+  "markdown-preview-enhanced.previewMode": "Previews Only",
+  "window.confirmSaveUntitledWorkspace": false,
+}

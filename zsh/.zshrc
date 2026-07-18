@@ -5,19 +5,13 @@ fi
 export PATH
 
 # Plugins
-source "$HOME/.plugins.zsh"
+source "$HOME/.zsh-plugins.sh"
 
 # Prompt (Completion, History, Autosuggestions, Theme)
-source "$HOME/.prompt.zsh"
+source "$HOME/.zsh-prompt.sh"
 
-# Custom Aliases
-source "$HOME/.aliases.sh"
-
-# Basic Environment
-source "$HOME/.export.sh"
-
-# Custom greeting message
-source "$HOME/.greeting.zsh"
+# Shared environment
+source "$HOME/.envrc"
 
 # ---------------------------------------------------------
 # Auto-start tmux
@@ -25,6 +19,3 @@ source "$HOME/.greeting.zsh"
 if [[ -z "$TMUX" && -t 1 ]]; then
   exec tmux new-session -A -s main
 fi
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
