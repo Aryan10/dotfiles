@@ -6,9 +6,10 @@
   "workbench.iconTheme": "material-icon-theme",
   "workbench.activityBar.location": "top",
   "workbench.editor.empty.hint": "hidden",
-  "workbench.preferredHighContrastColorTheme": "Dark Modern",
+  "workbench.preferredHighContrastColorTheme": "Default Dark Modern",
 
   "window.zoomLevel": -0.7,
+  "window.confirmSaveUntitledWorkspace": false,
 
   // =========================
   // EDITOR
@@ -22,7 +23,7 @@
   // =========================
   // TERMINAL
   // =========================
-  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.defaultProfile.linux": "zsh",
   "terminal.integrated.fontSize": 14,
   "terminal.integrated.mouseWheelScrollSensitivity": 2.5,
   "terminal.integrated.enableMultiLinePasteWarning": "always",
@@ -40,10 +41,6 @@
   // =========================
   "github.copilot.enable": {
     "*": false,
-    "plaintext": false,
-    "markdown": false,
-    "scminput": false,
-    "c": false
   },
   "github.copilot.chat.scopeSelection": true,
   "github.copilot.chat.codesearch.enabled": true,
@@ -77,9 +74,7 @@
   "cph.general.ignoreSTDERROR": true,
   "cph.general.timeOut": 10000,
   "cph.general.menuChoices": "cpp java js python c",
-
   "cph.language.cpp.Args": "--std=c++23",
-  // "cph.language.cpp.Args": "-std=c++23 -Og -g3 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address,undefined,leak -fno-sanitize-recover=all -fstack-protector-strong -fno-omit-frame-pointer",
 
   // =========================
   // PYTHON
@@ -179,6 +174,6 @@
   "vscodeWorkspaceSwitcher.showDeleteWorkspaceButton": false,
   "vscodeWorkspaceSwitcher.showTreeView": true,
   "vscodeWorkspaceSwitcher.showInActivityBar": false,
+
   "markdown-preview-enhanced.previewMode": "Previews Only",
-  "window.confirmSaveUntitledWorkspace": false,
 }

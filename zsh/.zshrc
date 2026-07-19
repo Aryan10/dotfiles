@@ -16,6 +16,10 @@ source "$HOME/.envrc"
 # ---------------------------------------------------------
 # Auto-start tmux
 # ---------------------------------------------------------
-if [[ -z "$TMUX" && -t 1 ]]; then
-  exec tmux new-session -A -s main
+if [[ -z "$TMUX" && $- == *i* ]]; then
+    if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+        exec tmux new-session -A -s code
+    else
+        exec tmux new-session -A -s main
+    fi
 fi

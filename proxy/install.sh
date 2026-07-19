@@ -1,21 +1,28 @@
-# Install cli scripts
-sudo install -m 755 -o root -g root ~/.dotfiles/proxy/proxyredsocks.sh /usr/local/sbin/proxyredsocks
-sudo install -m 755 -o root -g root ~/.dotfiles/proxy/masquerade.sh /usr/local/sbin/masquerade
+MODULE="$HOME/.dotfiles/proxy"
+
+SBIN_DIR="/usr/local/sbin"
+BIN_DIR="/usr/local/bin"
+POLKIT_DIR="/etc/polkit-1/rules.d"
+SYSTEMD_DIR="/etc/systemd/system"
+
+# Install CLI scripts
+sudo install -m755 -o root -g root "$MODULE/script/proxyredsocks.sh" "$SBIN_DIR/proxyredsocks"
+sudo install -m755 -o root -g root "$MODULE/script/masquerade.sh" "$SBIN_DIR/masquerade"
 
 # Install polkit rules
-sudo install -m 644 -o root -g root ~/.dotfiles/proxy/90-proxyredsocks.rules.js /etc/polkit-1/rules.d/90-proxyredsocks.rules
-sudo install -m 644 -o root -g root ~/.dotfiles/proxy/90-masquerade.rules.js /etc/polkit-1/rules.d/90-masquerade.rules
-sudo systemctl restart polkit
+sudo install -m644 -o root -g root "$MODULE/rules/90-proxyredsocks.rules.js" "$POLKIT_DIR/90-proxyredsocks.rules"
+sudo install -m644 -o root -g root "$MODULE/rules/90-masquerade.rules.js" "$POLKIT_DIR/90-masquerade.rules"
 
-# Install redsocks configuration template
-sudo install -m 644 -o root -g root ~/.dotfiles/proxy/redsocks.conf.template /etc/redsocks.conf.template
+# Install redsocks configuration
+sudo install -m644 -o root -g root "$MODULE/config/redsocks.conf.template" /etc/redsocks.conf.template
 
-# Install redsocks2 binary
-sudo install -Dm755 ~/.dotfiles/proxy/bin/redsocks2 /usr/local/bin/redsocks
- 
-# Install redsocks systemd service
-sudo install -Dm644 ~/.dotfiles/proxy/redsocks.service /etc/systemd/system/redsocks.service
+# Install redsocks2
+sudo install -Dm755 "$MODULE/bin/redsocks2" "$BIN_DIR/redsocks"
 
-# Enable the service
+# Install systemd service
+sudo install -Dm644 "$MODULE/redsocks.service" "$SYSTEMD_DIR/redsocks.service"
+
+# Start the services
 sudo systemctl daemon-reload
 sudo systemctl enable redsocks
+sudo systemctl restart polkit
