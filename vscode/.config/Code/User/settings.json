@@ -6,7 +6,7 @@
   "workbench.iconTheme": "material-icon-theme",
   "workbench.activityBar.location": "top",
   "workbench.editor.empty.hint": "hidden",
-  "workbench.preferredHighContrastColorTheme": "Default Dark Modern",
+  "workbench.preferredHighContrastColorTheme": "Visual Studio Dark - C++",
 
   "window.zoomLevel": -0.7,
   "window.confirmSaveUntitledWorkspace": false,
@@ -16,7 +16,7 @@
   // =========================
   "editor.fontSize": 15,
   "editor.fontFamily": "'MesloLGS NF'",
-  "editor.minimap.enabled": false,
+  "editor.minimap.enabled": true,
   "editor.minimap.autohide": "mouseover",
   "editor.mouseWheelScrollSensitivity": 2.5,
 
@@ -40,17 +40,11 @@
   // AI / AUTOCOMPLETE
   // =========================
   "github.copilot.enable": {
-    "*": false,
+    "*": true,
   },
   "github.copilot.chat.scopeSelection": true,
   "github.copilot.chat.codesearch.enabled": true,
   "github.copilot.nextEditSuggestions.enabled": true,
-
-  "supermaven.enable": {
-    "*": false
-  },
-  "supermaven.otherWarning": false,
-  "supermaven.allowGitignore": true,
 
   // =========================
   // C / C++
@@ -91,9 +85,9 @@
   },
 
   // =========================
-  // JAVASCRIPT / TYPESCRIPT
+  // JS / TS
   // =========================
-  "javascript.updateImportsOnFileMove.enabled": "always",
+  "js/ts.updateImportsOnFileMove.enabled": "always",
 
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -117,7 +111,7 @@
   },
 
   // =========================
-  // FORMATTING (JSON, HTML, MD)
+  // OTHER LANGUAGES
   // =========================
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -139,7 +133,7 @@
   },
 
   // =========================
-  // FILES / ASSOCIATIONS
+  // FILES ASSOCIATIONS
   // =========================
   "files.associations": {
     "*.asm": "retroasm_8085"
@@ -158,22 +152,17 @@
     "*.qmd": "markdown-preview-enhanced",
     "*.mdx": "markdown-preview-enhanced"
   },
-  "makefile.configureOnOpen": false,
 
   // =========================
-  // NOTEBOOK / JUPYTER
+  // NOTEBOOK
   // =========================
   "notebook.output.scrolling": true,
-  "jupyter.askForKernelRestart": false,
 
   // =========================
-  // EXTENSIONS / MISC
+  // EXTENSIONS
   // =========================
   "regionFold.regionNames": ["ultraaryan10", "TEMPLATE", "DEBUG"],
-
-  "vscodeWorkspaceSwitcher.showDeleteWorkspaceButton": false,
-  "vscodeWorkspaceSwitcher.showTreeView": true,
-  "vscodeWorkspaceSwitcher.showInActivityBar": false,
-
   "markdown-preview-enhanced.previewMode": "Previews Only",
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4o-mini",
 }
