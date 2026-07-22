@@ -6,10 +6,23 @@
   "workbench.iconTheme": "material-icon-theme",
   "workbench.activityBar.location": "top",
   "workbench.editor.empty.hint": "hidden",
-  "workbench.preferredHighContrastColorTheme": "Visual Studio Dark - C++",
+  "workbench.preferredHighContrastColorTheme": "Dark Modern",
 
   "window.zoomLevel": -0.7,
+  "window.menuBarVisibility": "toggle",
+  "window.titleBarStyle": "custom",
   "window.confirmSaveUntitledWorkspace": false,
+
+  // =========================
+  // COLORS
+  // =========================
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#141414",
+    "titleBar.inactiveBackground": "#1F1F1F",
+    "titleBar.activeForeground": "#CCCCCC",
+    "titleBar.inactiveForeground": "#999999",
+    "titleBar.border": "#2B2B2B"
+  },
 
   // =========================
   // EDITOR
@@ -35,6 +48,8 @@
   "git.fetchOnPull": true,
   "git.ignoreLegacyWarning": true,
   "git.openRepositoryInParentFolders": "always",
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4o-mini",
 
   // =========================
   // AI / AUTOCOMPLETE
@@ -45,6 +60,7 @@
   "github.copilot.chat.scopeSelection": true,
   "github.copilot.chat.codesearch.enabled": true,
   "github.copilot.nextEditSuggestions.enabled": true,
+  "chat.unifiedAgentsBar.enabled": true,
 
   // =========================
   // C / C++
@@ -73,7 +89,9 @@
   // =========================
   // PYTHON
   // =========================
-  "python.defaultInterpreterPath": "python3",
+  "python.terminal.useEnvFile": true,
+  "python.languageServer": "Default",
+  "python.defaultInterpreterPath": "/usr/bin/python3",
   "python.createEnvironment.trigger": "off",
 
   // =========================
@@ -163,6 +181,6 @@
   // =========================
   "regionFold.regionNames": ["ultraaryan10", "TEMPLATE", "DEBUG"],
   "markdown-preview-enhanced.previewMode": "Previews Only",
-  "gitlens.ai.model": "vscode",
-  "gitlens.ai.vscode.model": "copilot:gpt-4o-mini",
+  "workbench.browser.showInTitleBar": true,
+  "workbench.colorTheme": "Dark Modern",
 }

@@ -11,6 +11,7 @@ PROXY_IP="${2:-}"       # Proxy server IP address (passed as argument)
 RESERVED=(
   0.0.0.0/8
   10.0.0.0/8
+  100.64.0.0/10         # Tailscale CGNAT range
   127.0.0.0/8
   169.254.0.0/16
   172.16.0.0/12
@@ -47,6 +48,9 @@ case "${1:-}" in
     # Create or flush the custom iptables chain
     iptables -t nat -N $CHAIN 2>/dev/null || true
     iptables -t nat -F $CHAIN
+
+    # Bypass all traffic sent through the Tailscale interface
+    iptables -t nat -A $CHAIN -o tailscale0 -j RETURN
 
     # Exclude private/reserved networks from redirection (whitelist)
     # Traffic to these networks bypasses the proxy
