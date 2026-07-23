@@ -4,9 +4,6 @@ Documentation=man:redsocks(8)
 After=network-online.target
 Wants=network-online.target
 
-Before=shutdown.target poweroff.target reboot.target sleep.target
-Conflicts=shutdown.target sleep.target
-
 [Service]
 Type=forking
 PIDFile=/run/redsocks.pid
