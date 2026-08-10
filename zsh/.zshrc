@@ -21,7 +21,9 @@ if [[ -z "$TMUX" && $- == *i* ]]; then
         exec tmux new-session -A -s ssh
     elif [[ "$TERM_PROGRAM" == "vscode" ]]; then
         exec tmux new-session -A -s code
+    elif [[ -n "$KITTY_WINDOW_ID" ]]; then
+    	exec tmux new-session -A -s main
     else
-        exec tmux new-session -A -s main
+        exec tmux new-session -A -s console
     fi
 fi
