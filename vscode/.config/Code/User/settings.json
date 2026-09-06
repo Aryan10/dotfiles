@@ -161,14 +161,7 @@
     "**/*.asm~": true
   },
   "workbench.editorAssociations": {
-    // "*.md": "markdown-preview-enhanced",
-    // "*.markdown": "markdown-preview-enhanced",
-    // "*.mdown": "markdown-preview-enhanced",
-    // "*.mkdn": "markdown-preview-enhanced",
-    // "*.mkd": "markdown-preview-enhanced",
-    // "*.rmd": "markdown-preview-enhanced",
-    // "*.qmd": "markdown-preview-enhanced",
-    // "*.mdx": "markdown-preview-enhanced"
+    "*.pdf": "pdf.preview"
   },
   "markdown-preview-enhanced.previewMode": "Previews Only",
 

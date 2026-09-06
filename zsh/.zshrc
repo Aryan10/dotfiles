@@ -16,14 +16,15 @@ source "$HOME/.envrc"
 # ---------------------------------------------------------
 # Auto-start tmux
 # ---------------------------------------------------------
+
 if [[ -z "$TMUX" && $- == *i* ]]; then
 	if [[ -n "$SSH_CONNECTION" ]]; then
         exec tmux new-session -A -s ssh
     elif [[ "$TERM_PROGRAM" == "vscode" ]]; then
-        exec tmux new-session -A -s code
+        exec tmux new-session -A -s code -c $PWD
     elif [[ -n "$KITTY_WINDOW_ID" ]]; then
     	exec tmux new-session -A -s main
     else
-        exec tmux new-session -A -s console
+        exec tmux new-session -c $PWD
     fi
 fi

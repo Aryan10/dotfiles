@@ -132,15 +132,46 @@ def leave_raw_mode():
 # RCLONE
 # =============================================================================
 
+def in_proc_mounts(path: Path) -> bool:
+    try:
+        target = str(path)
+        with open("/proc/mounts", "r") as f:
+            for line in f:
+                parts = line.split()
+                if len(parts) >= 2 and parts[1] == target:
+                    return True
+    except OSError:
+        pass
+    return False
+
+
 def mounted(path: Path) -> bool:
-    return (
-        subprocess.run(
+    try:
+        res = subprocess.run(
             ["mountpoint", "-q", str(path)],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
-        ).returncode
-        == 0
-    )
+        )
+        if res.returncode != 0:
+            return False
+        os.stat(path)
+        return True
+    except OSError:
+        return False
+
+
+def is_stale_mount(path: Path) -> bool:
+    try:
+        os.stat(path)
+    except FileNotFoundError:
+        return False
+    except OSError:
+        return True
+
+    if in_proc_mounts(path) and not mounted(path):
+        return True
+
+    return False
 
 
 def remote_ok(remote: str):
@@ -164,7 +195,12 @@ def authentication_error(stderr: str) -> bool:
 
 
 def get_state(cfg):
-    if mounted(cfg["path"]):
+    path = cfg["path"]
+
+    if is_stale_mount(path):
+        return "error"
+
+    if mounted(path):
         return "mounted"
 
     ok, stderr = remote_ok(cfg["remote"])
@@ -192,10 +228,23 @@ def get_states():
 def mount_one(cfg) -> bool:
     path = cfg["path"]
 
-    path.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
+    if is_stale_mount(path) or in_proc_mounts(path):
+        unmount_one(cfg)
+
+    try:
+        path.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+    except (FileExistsError, OSError):
+        unmount_one(cfg)
+        try:
+            path.mkdir(
+                parents=True,
+                exist_ok=True,
+            )
+        except Exception:
+            return False
 
     ok, _ = remote_ok(cfg["remote"])
 
